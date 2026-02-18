@@ -10,16 +10,13 @@ namespace MauiStatusBarTest;
 public static partial class StatusBarExtras
 {
 	static object CoerceStatusBarColor(BindableObject bindable, object value)
-	{
-#if ANDROID || IOS
-		CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor((Color?)value);
-#endif
-		return value;
-	}
+		=> PlatformInvokeWithCoerceValue<Color?>(value, CommunityToolkit.Maui.Core.Platform.StatusBar.SetColor);
 	static object CoerceStatusBarStyle(BindableObject bindable, object value)
+		=> PlatformInvokeWithCoerceValue<StatusBarStyle>(value, CommunityToolkit.Maui.Core.Platform.StatusBar.SetStyle);
+	static object PlatformInvokeWithCoerceValue<T>(object value, Action<T> action)
 	{
 #if ANDROID || IOS
-		CommunityToolkit.Maui.Core.Platform.StatusBar.SetStyle((StatusBarStyle)value);
+		action((T)value);
 #endif
 		return value;
 	}
